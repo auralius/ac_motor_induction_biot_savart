@@ -1,4 +1,4 @@
-This file demonstrate the rotating magnetic field in an AC Motor with 2 poles and 4 poles by using Biot-Savart law.  
+This repository is to demonstrate the rotating magnetic field in an AC Motor with 2 poles and 4 poles by using Biot-Savart law.  
 The configuration of the windings are based on the Chapman's book.
 
 2 poles:   
