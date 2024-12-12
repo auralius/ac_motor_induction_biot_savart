@@ -16,14 +16,15 @@ xlim([-R-R/10 R+R/10]);
 ylim([-R-R/10 R+R/10]);
 axis equal;
 
-step = 0.05;
+step = 0.04;
 mu_0 = 4*pi*10^-7;
 
 % 4-pole ac motor
 % 4-pole motor has 12 wire position, one wire position to antoher makes a
 % 30 degress angle
 
-for wt = 0:360
+nrotations = 2;
+for wt = 0:360*nrotations    
     Ia1 = Im*sind(wt-0);
     Ia1_ = -Im*sind(wt-0);
     Ib1 = Im*sind(wt-120);
@@ -106,28 +107,41 @@ for wt = 0:360
     [imind,cm] = rgb2ind(im,256);
     
     if wt == 0
-        h = quiver3(X,Y,Z, U, V, W);
-        plot(xa1(1), xa1(2), 'ro');
-        plot(xa1_(1), xa1_(2), 'ro');
-        plot(xb1(1), xb1(2), 'ro');
-        plot(xb1_(1), xb1_(2), 'ro');
-        plot(xc1(1), xc1(2), 'ro');
-        plot(xc1_(1), xc1_(2), 'ro');
+        h    = quiver3(X,Y,Z, U, V, W);
+
+        ha1  = plot(xa1(1), xa1(2), 'ro');
+        ha1_ = plot(xa1_(1), xa1_(2), 'ro');
+        hb1  = plot(xb1(1), xb1(2), 'ro');
+        hb1_ = plot(xb1_(1), xb1_(2), 'ro');
+        hc1  = plot(xc1(1), xc1(2), 'ro');
+        hc1_ = plot(xc1_(1), xc1_(2), 'ro');
         
-        plot(xa2(1), xa2(2), 'ro');
-        plot(xa2_(1), xa2_(2), 'ro');
-        plot(xb2(1), xb2(2), 'ro');
-        plot(xb2_(1), xb2_(2), 'ro');
-        plot(xc2(1), xc2(2), 'ro');
-        plot(xc2_(1), xc2_(2), 'ro')
+        ha2  = plot(xa2(1), xa2(2), 'ro');
+        ha2_ = plot(xa2_(1), xa2_(2), 'ro');
+        hb2  = plot(xb2(1), xb2(2), 'ro');
+        hb2_ = plot(xb2_(1), xb2_(2), 'ro');
+        hc2  = plot(xc2(1), xc2(2), 'ro');
+        hc2_ = plot(xc2_(1), xc2_(2), 'ro');
+
+        I = {Ia1, Ia1_, Ib1, Ib1_, Ic1, Ic1_, Ia2, Ia2_, Ib2, Ib2_, Ic2, Ic2_};
+        H = {ha1, ha1_, hb1, hb1_, hc1, hc1_, ha2, ha2_, hb2, hb2_, hc2, hc2_};
         
-        imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+        imwrite(imind,cm,filename,'gif', 'Loopcount',inf, 'DelayTime', 0.02);
     else
         set(h,'xdata',X,'ydata',Y,'zdata',Z,'udata',U, 'vdata',V,'wdata',W)
+
+        for n = 1 : length(H)
+            if I(n) > 0 
+                set(H{n}, 'Marker', 'o')
+            else
+                set(H{n}, 'Marker', 'x')
+            end
+        end
+        
         drawnow
         %pause(0.1);
         
-        imwrite(imind,cm,filename,'gif','WriteMode','append');
+        imwrite(imind,cm,filename,'gif','WriteMode','append', 'DelayTime', 0.02);
     end
 end
 

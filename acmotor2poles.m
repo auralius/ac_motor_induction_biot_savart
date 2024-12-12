@@ -16,14 +16,15 @@ xlim([-R-R/10 R+R/10]);
 ylim([-R-R/10 R+R/10]);
 axis equal;
 
-step = 0.05;
+step = 0.04; % spatial grid resolution, try smaller number!
 mu_0 = 4*pi*10^-7;
 
 % 2-pole ac motor
 % 2-pole motor has 6 wire position, one wire position to antoher makes a
 % 60 degress angle
 
-for wt = 0:360
+nrotations = 2;
+for wt = 0:360*nrotations
     Ia = Im*sind(wt-0);
     Ia_ = -Im*sind(wt-0);
     Ib = Im*sind(wt-120);
@@ -91,21 +92,33 @@ for wt = 0:360
     [imind,cm] = rgb2ind(im,256);
     
     if wt == 0
-        h = quiver3(X,Y,Z, U, V, W);
-        plot(xa(1), xa(2), 'ro');
-        plot(xa_(1), xa_(2), 'ro');
-        plot(xb(1), xb(2), 'ro');
-        plot(xb_(1), xb_(2), 'ro');
-        plot(xc(1), xc(2), 'ro');
-        plot(xc_(1), xc_(2), 'ro');
+        h    = quiver3(X,Y,Z, U, V, W);
+        ha   = plot(xa(1), xa(2), 'r');
+        ha_  = plot(xa_(1), xa_(2), 'r');
+        hb   = plot(xb(1), xb(2), 'r');
+        hb_  = plot(xb_(1), xb_(2), 'r');
+        hc   = plot(xc(1), xc(2), 'r');
+        hc_  = plot(xc_(1), xc_(2), 'r');
+
+        I = {Ia, Ia_, Ib, Ib_, Ic, Ic_};
+        H = {ha, ha_, hb, hb_, hc, hc_};
         
-        imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+        imwrite(imind,cm,filename,'gif', 'Loopcount', inf, 'DelayTime', 0.02);
     else
         set(h,'xdata',X,'ydata',Y,'zdata',Z,'udata',U, 'vdata',V,'wdata',W)
+
+        for n = 1 : length(H)
+            if I(n) > 0 
+                set(H{n}, 'Marker', 'o')
+            else
+                set(H{n}, 'Marker', 'x')
+            end
+        end
+
         drawnow
         %pause(0.1);
         
-        imwrite(imind,cm,filename,'gif','WriteMode','append');
+        imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime', 0.02);
     end
 end
 
